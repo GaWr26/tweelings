@@ -42,7 +42,7 @@ export default class HomeScreen extends React.Component {
             </View>
 
             <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
+              Welcome to tweelin.gs
             </Text>
           </View>
 
@@ -77,7 +77,7 @@ export default class HomeScreen extends React.Component {
     } else {
       return (
         <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
+          Tweelings is in production mode, the app will run at full speed.
         </Text>
       );
     }
