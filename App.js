@@ -4,7 +4,7 @@ var Buffer = require('buffer/').Buffer;
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
-import Auth0 from 'react-native-auth0';
+//import Auth0 from 'react-native-auth0';
 
 
 export default class App extends React.Component {
@@ -46,7 +46,7 @@ export default class App extends React.Component {
       .then((responseData) => {
         bearerToken = responseData.access_token;
         console.log("Got Bearer: " + responseData.access_token);
-        this._loadTweet();
+        _loadTweet();
 
       })
       .catch((error) => {
