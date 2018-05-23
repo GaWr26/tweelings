@@ -30,6 +30,7 @@
     "react-native": "github:expo/react-native#sdk-27.0.0",
     "react-native-auth0": "^1.2.2",
     "react-native-oauth": "^2.2.0",
+    "react-native-swipe-gestures": "^1.0.2",
     "react-navigation": "^2.0.1",
     "react-timer-mixin": "^0.13.3",
     "utf8": "^3.0.0"
