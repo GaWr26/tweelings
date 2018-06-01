@@ -1,8 +1,8 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 21527,
-  "expoServerNgrokUrl": "https://kb-vuy.gawr.tweelings.exp.direct",
-  "packagerNgrokUrl": "https://packager.kb-vuy.gawr.tweelings.exp.direct",
-  "ngrokPid": 21566
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
