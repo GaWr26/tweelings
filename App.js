@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StyleSheet, Text, View, Button, StatusBar } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
-import RootNavigation from './navigation/RootNavigation';
+import HomeScreen from './screens/HomeScreen';
 //import Auth0 from 'react-native-auth0';
 
 
@@ -27,7 +27,7 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <RootNavigation />
+          <HomeScreen />
         </View>
       );
     }
