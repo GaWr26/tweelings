@@ -4,17 +4,22 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  CameraRoll,
   Button,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   View,
   Share,
+  Modal,
 } from 'react-native';
-import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { Dimensions } from 'react-native';
+import { KeepAwake } from 'expo';
+import { Constants, takeSnapshotAsync } from 'expo';
+import { Permissions } from 'expo';
 
 
 var Buffer = require('buffer/').Buffer;
@@ -70,27 +75,35 @@ export default class HomeScreen extends React.Component {
     this.state = {
       tweelingToShow: '',
       author: '',
-      authorImageURL: '',
+      authorImageURL: 'http://',
       myText: 'I\'m ready to get swiped!',
       gestureName: 'none',
       backgroundColor: '#fff',
+      modalVisible: false,
     }
   }
 
-  onClick = async () => {
+  onShare = async () => {
 
     const { width, height } = Dimensions.get('window');
     const options = {
       format: 'jpg',
-      quality: 0.3,
+      quality: 0.75,
       result: 'file',
       height,
       width,
     };
     const uri = await Expo.takeSnapshotAsync(this.refs.mainScreen, options);
 
+
+    theMessage = "Found this on tweelin.gs";
+
+    if (Platform.OS === "android") {
+      theMessage = "Found this on tweelin.gs: " + this.state.tweelingToShow;
+    }
+
     Share.share({
-      message: "Found this on tweelin.gs",
+      message: theMessage,
       title: "Tweelings",
       url: uri,
       subject: "Share tweeling"
@@ -102,6 +115,24 @@ export default class HomeScreen extends React.Component {
 
         ]
       })
+  }
+
+  onSave = async () => {
+
+    const { status_roll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    const { width, height } = Dimensions.get('window');
+    const options = {
+      format: 'jpg',
+      quality: 0.75,
+      result: 'file',
+      height,
+      width,
+    };
+    const uri = await Expo.takeSnapshotAsync(this.refs.mainScreen, options);
+
+    let saveResult = await CameraRoll.saveToCameraRoll(uri, 'photo');
+    this.setState({ modalVisible: true });
   }
 
 
@@ -335,16 +366,17 @@ export default class HomeScreen extends React.Component {
 
 
 
+
+
+
   render() {
-
-
-
     const config = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
     };
 
     return (
+
 
 
       <GestureRecognizer
@@ -357,7 +389,33 @@ export default class HomeScreen extends React.Component {
           flex: 1
         }}
       >
+
+        <View>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              alert('Modal has been closed.');
+            }}>
+            <View style={styles.modalBottom}>
+            <View style={styles.modalBottomContent}>
+                <Text>Tweeling saved to your camera roll!</Text>
+
+                <TouchableHighlight
+                  onPress={() => {
+                    this.setState({ modalVisible: false });
+                  }}>
+                  <Text>Thanks!</Text>
+                </TouchableHighlight>
+              </View>
+              </View>
+          </Modal>
+        </View>
+
         <View ref="mainScreen" style={this.mainStyle()}>
+          <KeepAwake />
           {this._maybeRenderDevelopmentModeWarning()}
 
           <Text style={styles.tweelingText}>
@@ -366,8 +424,8 @@ export default class HomeScreen extends React.Component {
 
           <View style={styles.authorView}>
             <Image
-             style={{width: 50, height: 50}}
-              source={{uri: this.state.authorImageURL}}
+              style={{ width: 50, height: 50 }}
+              source={{ uri: this.state.authorImageURL }}
             />
             <Text style={styles.authorText}>
               {this.state.author}
@@ -377,9 +435,14 @@ export default class HomeScreen extends React.Component {
         </View>
 
         <View style={styles.tabBarInfoContainer}>
-          <Button
-            onPress={this.onClick}
+          <Button style={styles.shareButton}
+            onPress={this.onShare}
             title="Share"
+            color="#841584"
+          />
+          <Button style={styles.shareButton}
+            onPress={this.onSave}
+            title="Save"
             color="#841584"
           />
 
@@ -429,8 +492,7 @@ const styles = StyleSheet.create({
   },
   developmentModeText: {
     position: 'absolute',
-    bottom: 70,
-    marginBottom: 20,
+    top: 50,
     color: 'rgba(0,0,0,0.4)',
     fontSize: 14,
     lineHeight: 19,
@@ -445,7 +507,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   authorText: {
-    marginLeft:20,
+    marginLeft: 20,
     fontSize: 14,
     color: 'rgba(255,255,255, 1)',
     lineHeight: 34,
@@ -457,25 +519,39 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 110,
   },
+  shareButton: {
+    marginLeft: 30,
+    marginRight: 30,
+  },
   tabBarInfoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
     paddingVertical: 20,
   },
+  modalBottom: {  
+    position: 'absolute',
+    height:200,
+    bottom: 0,
+    left: 0,
+    right: 0,    
+    backgroundColor:"#fff",
+  },
+  modalBottomContent: {  
+    flex:1,
+    height:100,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    position: 'absolute',
+    bottom: 50,
+    left: 50,
+    right: 50,  
+  },
+
 
 });
