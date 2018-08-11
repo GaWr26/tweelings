@@ -20,6 +20,8 @@ import { Dimensions } from 'react-native';
 import { KeepAwake } from 'expo';
 import { Constants, takeSnapshotAsync } from 'expo';
 import { Permissions } from 'expo';
+import { LinearGradient } from 'expo';
+import SvgUri from 'react-native-svg-uri';
 
 
 var Buffer = require('buffer/').Buffer;
@@ -36,7 +38,7 @@ export default class HomeScreen extends React.Component {
   currentTweelingIndex = 0;
   currentTweeling = {};
   activeCategory = 0;
-  tweelingCategories = [{ tweeling: "love", colour: { gradient1: 0x662483, gradient2: 0xC188BB, gradient3: 0x662483, textHighlight: "0x6c2356" }, standard: true },
+  tweelingCategories = [{ tweeling: "love", colour: { gradient1: 0xfbab7e, gradient2: 0xf7ce68, textHighlight: "#de025f" }, standard: true },
   { tweeling: "think", colour: { gradient1: 0x294697, gradient2: 0x009FE3, gradient3: 0x294697, textHighlight: "0x193890" }, standard: true },
   { tweeling: "believe", colour: { gradient1: 0x006633, gradient2: 0x3AAA35, gradient3: 0x006633, textHighlight: "0x0E3515" }, standard: true },
   { tweeling: "feel", colour: { gradient1: 0xE94E1B, gradient2: 0xF9B233, gradient3: 0xE94E1B, textHighlight: "0x781f00" }, standard: true },
@@ -44,27 +46,7 @@ export default class HomeScreen extends React.Component {
 
   tweelingToDisplay = "";
 
-  colors0 = { gradient1: 0x7089ce, gradient2: 0x7ae39a, gradient3: 0x7089ce, textHighlight: "0x5b80e4" };
-  colors1 = { gradient1: 0xffd599, gradient2: 0x7ae39a, gradient3: 0xffd599, textHighlight: "0x508c5f" };
-  colors2 = { gradient1: 0x9d967a, gradient2: 0x2e4036, gradient3: 0x9d967a, textHighlight: "0x18211b" };
-  colors3 = { gradient1: 0xe4bb17, gradient2: 0x4c2075, gradient3: 0xe4bb17, textHighlight: "0xd7b560" };
-  colors4 = { gradient1: 0xd317e4, gradient2: 0x4b7cec, gradient3: 0xd317e4, textHighlight: "0xffe16a" };
-  colors5 = { gradient1: 0x17e4d8, gradient2: 0xf4fb8c, gradient3: 0x17e4d8, textHighlight: "0x0e7994" };
-  colors6 = { gradient1: 0xe41717, gradient2: 0x8f0bf5, gradient3: 0xe41717, textHighlight: "0x0a0647" };
-  colors7 = { gradient1: 0xf0ff00, gradient2: 0x2a92bd, gradient3: 0xf0ff00, textHighlight: "0x493a12" };
-  colors8 = { gradient1: 0x00f8f5, gradient2: 0xbfbfbf, gradient3: 0x00f8f5, textHighlight: "0x7a84eb" };
-  colors9 = { gradient1: 0x401c0f, gradient2: 0xcc7373, gradient3: 0x401c0f, textHighlight: "0xde5323" };
-  colors10 = { gradient1: 0x00eca1, gradient2: 0xcc9f73, gradient3: 0x00eca1, textHighlight: "0x256b54" };
-  colors11 = { gradient1: 0xbfd122, gradient2: 0x5e4fbd, gradient3: 0xbfd122, textHighlight: "0xffcc00" };
-  colors12 = { gradient1: 0x00ff00, gradient2: 0xff00ae, gradient3: 0x00ff00, textHighlight: "0xfffc00" };
-  colors13 = { gradient1: 0xeb73bc, gradient2: 0xe1ea79, gradient3: 0xeb73bc, textHighlight: "0xfffc00" };
-  colors14 = { gradient1: 0x08be22, gradient2: 0x6978c2, gradient3: 0xe08be22, textHighlight: "0xfffc00" };
-  colors15 = { gradient1: 0x08beb8, gradient2: 0xc2698f, gradient3: 0x08beb8, textHighlight: "0x6b2f25" };
-  colors16 = { gradient1: 0xf1ff0b, gradient2: 0x69c2b6, gradient3: 0xf1ff0b, textHighlight: "0x25296b" };
-  colors17 = { gradient1: 0xdc25d1, gradient2: 0x69c2b6, gradient3: 0xdc25d1, textHighlight: "0x25296b" };
-  colors18 = { gradient1: 0xdc25d1, gradient2: 0xead100, gradient3: 0xdc25d1, textHighlight: "0x9d2ac8" };
-  colors19 = { gradient1: 0xdc25d1, gradient2: 0xa0ea00, gradient3: 0xdc25d1, textHighlight: "0x2037ab" };
-  colors20 = { gradient1: 0xec0000, gradient2: 0x6976f2, gradient3: 0xec0000, textHighlight: "0x500c69" };
+
 
   activeColors = {};
 
@@ -357,12 +339,29 @@ export default class HomeScreen extends React.Component {
 
   mainStyle = function (options) {
     return {
-      backgroundColor: this.state.backgroundColor,
+      //backgroundColor: this.state.backgroundColor,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center'
     }
   }
+  gradientColors = function (options) {
+    return ['#f7ce68', '#fbab7e' ];
+    
+  }
+
+  textStyle = function (options){
+    return {
+    marginRight: 20,
+    marginLeft: 20,
+    fontSize: 28,
+    color: this.tweelingCategories[this.activeCategory].colour.textHighlight,
+    lineHeight: 34,
+    textAlign: 'center'
+    }
+  }
+  
+ 
 
 
 
@@ -376,7 +375,7 @@ export default class HomeScreen extends React.Component {
     };
 
     return (
-
+     
 
 
       <GestureRecognizer
@@ -389,7 +388,17 @@ export default class HomeScreen extends React.Component {
           flex: 1
         }}
       >
+ <View>
+<SvgUri width="100" height="100" source={require('../assets/images/patterns/homer-simpson.svg')} />
+        </View>
 
+       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <LinearGradient ref="gradient" colors={this.gradientColors()} >
+
+        
+
+          
+      
         <View>
 
           <Modal
@@ -414,11 +423,14 @@ export default class HomeScreen extends React.Component {
           </Modal>
         </View>
 
+
+
         <View ref="mainScreen" style={this.mainStyle()}>
+        
           <KeepAwake />
           {this._maybeRenderDevelopmentModeWarning()}
 
-          <Text style={styles.tweelingText}>
+          <Text  style={this.textStyle()}>
             {this.state.tweelingToShow}
           </Text>
 
@@ -431,7 +443,7 @@ export default class HomeScreen extends React.Component {
               {this.state.author}
             </Text>
           </View>
-
+         
         </View>
 
         <View style={styles.tabBarInfoContainer}>
@@ -447,9 +459,8 @@ export default class HomeScreen extends React.Component {
           />
 
         </View>
-
-
-
+ </LinearGradient>
+ </View>
       </GestureRecognizer>
     );
   }
@@ -496,14 +507,6 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)',
     fontSize: 14,
     lineHeight: 19,
-    textAlign: 'center',
-  },
-  tweelingText: {
-    marginRight: 20,
-    marginLeft: 20,
-    fontSize: 28,
-    color: 'rgba(255,255,255, 1)',
-    lineHeight: 34,
     textAlign: 'center',
   },
   authorText: {
