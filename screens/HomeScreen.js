@@ -346,22 +346,22 @@ export default class HomeScreen extends React.Component {
     }
   }
   gradientColors = function (options) {
-    return ['#f7ce68', '#fbab7e' ];
-    
+    return ['#f7ce68', '#fbab7e'];
+
   }
 
-  textStyle = function (options){
+  textStyle = function (options) {
     return {
-    marginRight: 20,
-    marginLeft: 20,
-    fontSize: 28,
-    color: this.tweelingCategories[this.activeCategory].colour.textHighlight,
-    lineHeight: 34,
-    textAlign: 'center'
+      marginRight: 20,
+      marginLeft: 20,
+      fontSize: 28,
+      color: this.tweelingCategories[this.activeCategory].colour.textHighlight,
+      lineHeight: 34,
+      textAlign: 'center'
     }
   }
-  
- 
+
+
 
 
 
@@ -375,7 +375,7 @@ export default class HomeScreen extends React.Component {
     };
 
     return (
-     
+
 
 
       <GestureRecognizer
@@ -388,79 +388,75 @@ export default class HomeScreen extends React.Component {
           flex: 1
         }}
       >
- <View>
-<SvgUri width="100" height="100" source={require('../assets/images/patterns/homer-simpson.svg')} />
-        </View>
-
-       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <LinearGradient ref="gradient" colors={this.gradientColors()} >
-
-        
-
-          
-      
         <View>
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              alert('Modal has been closed.');
-            }}>
-            <View style={styles.modalBottom}>
-            <View style={styles.modalBottomContent}>
-                <Text>Tweeling saved to your camera roll!</Text>
+          <LinearGradient ref="gradient" colors={this.gradientColors()}
+            style={{ height: '100%' }}>
+            <SvgUri width="100" height="100" source={require('../assets/images/patterns/homer-simpson.svg')} />
 
-                <TouchableHighlight
-                  onPress={() => {
-                    this.setState({ modalVisible: false });
-                  }}>
-                  <Text>Thanks!</Text>
-                </TouchableHighlight>
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                  alert('Modal has been closed.');
+                }}>
+                <View style={styles.modalBottom}>
+                  <View style={styles.modalBottomContent}>
+                    <Text>Tweeling saved to your camera roll!</Text>
+
+                    <TouchableHighlight
+                      onPress={() => {
+                        this.setState({ modalVisible: false });
+                      }}>
+                      <Text>Thanks!</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </Modal>
+            </View>
+
+
+
+            <View ref="mainScreen" style={this.mainStyle()}>
+
+              <KeepAwake />
+              {this._maybeRenderDevelopmentModeWarning()}
+
+              <Text style={this.textStyle()}>
+                {this.state.tweelingToShow}
+              </Text>
+
+              <View style={styles.authorView}>
+                <Image
+                  style={{ width: 50, height: 50 }}
+                  source={{ uri: this.state.authorImageURL }}
+                />
+                <Text style={styles.authorText}>
+                  {this.state.author}
+                </Text>
               </View>
-              </View>
-          </Modal>
-        </View>
 
+            </View>
 
+            <View style={styles.tabBarInfoContainer}>
+              <Button style={styles.shareButton}
+                onPress={this.onShare}
+                title="Share"
+                color="#841584"
+              />
+              <Button style={styles.shareButton}
+                onPress={this.onSave}
+                title="Save"
+                color="#841584"
+              />
+            </View>
+          </LinearGradient>
 
-        <View ref="mainScreen" style={this.mainStyle()}>
-        
-          <KeepAwake />
-          {this._maybeRenderDevelopmentModeWarning()}
-
-          <Text  style={this.textStyle()}>
-            {this.state.tweelingToShow}
-          </Text>
-
-          <View style={styles.authorView}>
-            <Image
-              style={{ width: 50, height: 50 }}
-              source={{ uri: this.state.authorImageURL }}
-            />
-            <Text style={styles.authorText}>
-              {this.state.author}
-            </Text>
-          </View>
-         
-        </View>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Button style={styles.shareButton}
-            onPress={this.onShare}
-            title="Share"
-            color="#841584"
-          />
-          <Button style={styles.shareButton}
-            onPress={this.onSave}
-            title="Save"
-            color="#841584"
-          />
 
         </View>
- </LinearGradient>
- </View>
       </GestureRecognizer>
     );
   }
@@ -537,23 +533,23 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 20,
   },
-  modalBottom: {  
+  modalBottom: {
     position: 'absolute',
-    height:200,
+    height: 200,
     bottom: 0,
     left: 0,
-    right: 0,    
-    backgroundColor:"#fff",
+    right: 0,
+    backgroundColor: "#fff",
   },
-  modalBottomContent: {  
-    flex:1,
-    height:100,
+  modalBottomContent: {
+    flex: 1,
+    height: 100,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     position: 'absolute',
     bottom: 50,
     left: 50,
-    right: 50,  
+    right: 50,
   },
 
 
