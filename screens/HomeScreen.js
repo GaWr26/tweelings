@@ -22,6 +22,8 @@ import { Constants, takeSnapshotAsync } from 'expo';
 import { Permissions } from 'expo';
 import { LinearGradient } from 'expo';
 import SvgUri from 'react-native-svg-uri';
+import Mask from "react-native-mask";
+import { Font } from 'expo';
 
 
 var Buffer = require('buffer/').Buffer;
@@ -39,10 +41,10 @@ export default class HomeScreen extends React.Component {
   currentTweeling = {};
   activeCategory = 0;
   tweelingCategories = [{ tweeling: "love", colour: { gradient1: 0xfbab7e, gradient2: 0xf7ce68, textHighlight: "#de025f" }, standard: true },
-  { tweeling: "think", colour: { gradient1: 0x294697, gradient2: 0x009FE3, gradient3: 0x294697, textHighlight: "0x193890" }, standard: true },
-  { tweeling: "believe", colour: { gradient1: 0x006633, gradient2: 0x3AAA35, gradient3: 0x006633, textHighlight: "0x0E3515" }, standard: true },
-  { tweeling: "feel", colour: { gradient1: 0xE94E1B, gradient2: 0xF9B233, gradient3: 0xE94E1B, textHighlight: "0x781f00" }, standard: true },
-  { tweeling: "wish", colour: { gradient1: 0xDEB869, gradient2: 0xFFEBA6, gradient3: 0xDEB869, textHighlight: "0xB58A3E" }, standard: true }];
+  { tweeling: "think", colour: { gradient1: 0x294697, gradient2: 0x009FE3, gradient3: 0x294697, textHighlight: "#193890" }, standard: true },
+  { tweeling: "believe", colour: { gradient1: 0x006633, gradient2: 0x3AAA35, gradient3: 0x006633, textHighlight: "#0E3515" }, standard: true },
+  { tweeling: "feel", colour: { gradient1: 0xE94E1B, gradient2: 0xF9B233, gradient3: 0xE94E1B, textHighlight: "#781f00" }, standard: true },
+  { tweeling: "wish", colour: { gradient1: 0xDEB869, gradient2: 0xFFEBA6, gradient3: 0xDEB869, textHighlight: "#B58A3E" }, standard: true }];
 
   tweelingToDisplay = "";
 
@@ -56,6 +58,7 @@ export default class HomeScreen extends React.Component {
     super()
     this.state = {
       tweelingToShow: '',
+      tweeling:'',
       author: '',
       authorImageURL: 'http://',
       myText: 'I\'m ready to get swiped!',
@@ -238,7 +241,7 @@ export default class HomeScreen extends React.Component {
 
   loadTweeling = (q) => {
 
-    this.setState({ backgroundColor: this.tweelingCategories[this.activeCategory].colour.gradient1, tweelingToShow: "" });
+    this.setState({ backgroundColor: this.tweelingCategories[this.activeCategory].colour.gradient1, tweelingToShow: "", tweeling:"#"+q.tweeling });
 
     if (q != this.currentTweeling) {
       this.isInit = true;
@@ -352,7 +355,7 @@ export default class HomeScreen extends React.Component {
 
   textStyle = function (options) {
     return {
-      marginRight: 20,
+      marginRight: 50,
       marginLeft: 20,
       fontSize: 28,
       color: this.tweelingCategories[this.activeCategory].colour.textHighlight,
@@ -361,12 +364,15 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-
-
-
-
-
-
+  patternStyle = function (options) {
+    return {
+      tintColor:this.tweelingCategories[this.activeCategory].colour.textHighlight, 
+      flex:1, 
+      alignSelf: 'stretch', 
+      height: undefined, 
+      width: undefined
+    }
+  }
 
   render() {
     const config = {
@@ -375,27 +381,65 @@ export default class HomeScreen extends React.Component {
     };
 
     return (
-
-
-
       <GestureRecognizer
-        onSwipeUp={(state) => this.onSwipeUp(state)}
-        onSwipeDown={(state) => this.onSwipeDown(state)}
-        onSwipeLeft={(state) => this.onSwipeLeft(state)}
-        onSwipeRight={(state) => this.onSwipeRight(state)}
-        config={config}
-        style={{
-          flex: 1
-        }}
-      >
-        <View>
+      onSwipeUp={(state) => this.onSwipeUp(state)}
+      onSwipeDown={(state) => this.onSwipeDown(state)}
+      onSwipeLeft={(state) => this.onSwipeLeft(state)}
+      onSwipeRight={(state) => this.onSwipeRight(state)}
+      config={config}
+      style={{
+        flex: 1
+      }}
+    >
+      <View style={styles.container} ref="mainScreen">  
+         <LinearGradient colors={this.gradientColors()}
+            style={{ position:'absolute', width:'100%', height: '100%' }} /> 
+         <Image style={this.patternStyle()}
+          source={require('../assets/images/patterns/pattern.png')}
+          resizeMode="stretch"
+        />
+        <View style={{ position:'absolute', top:100, left:0 }}>
 
-          <LinearGradient ref="gradient" colors={this.gradientColors()}
-            style={{ height: '100%' }}>
-            <SvgUri width="100" height="100" source={require('../assets/images/patterns/homer-simpson.svg')} />
+          <KeepAwake />
 
+          <MonoText style={this.textStyle()} >
+            {this.state.tweelingToShow}
+          </MonoText>
 
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          
+
+        </View>
+          
+        
+          <View style={styles.authorView}>
+          <Mask shape={'circle'}>
+            <Image
+              style={{ width: 50, height: 50 }}
+              source={{ uri: this.state.authorImageURL }}
+            />
+          </Mask>
+          <View style={{ flex:'1', flexGrow:'1', alignItems:'flex-start', flexDirection:'column'}}>
+              <MonoText style={styles.authorText}>
+                by {this.state.author}
+              </MonoText> 
+              <MonoText style={styles.authorText}>
+                {this.state.tweeling}
+              </MonoText>
+          </View>
+           
+            <Button style={styles.shareButton}
+                onPress={this.onShare}
+                title="Share"
+                color="#841584"
+              />
+              <Button style={styles.shareButton}
+                onPress={this.onSave}
+                title="Save"
+                color="#841584"
+              />
+          </View>
+
+           <View style={{ flex: 1, position:'absolute', alignItems: 'center', justifyContent: 'center' }}>
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -417,76 +461,11 @@ export default class HomeScreen extends React.Component {
                 </View>
               </Modal>
             </View>
-
-
-
-            <View ref="mainScreen" style={this.mainStyle()}>
-
-              <KeepAwake />
-              {this._maybeRenderDevelopmentModeWarning()}
-
-              <Text style={this.textStyle()}>
-                {this.state.tweelingToShow}
-              </Text>
-
-              <View style={styles.authorView}>
-                <Image
-                  style={{ width: 50, height: 50 }}
-                  source={{ uri: this.state.authorImageURL }}
-                />
-                <Text style={styles.authorText}>
-                  {this.state.author}
-                </Text>
-              </View>
-
-            </View>
-
-            <View style={styles.tabBarInfoContainer}>
-              <Button style={styles.shareButton}
-                onPress={this.onShare}
-                title="Share"
-                color="#841584"
-              />
-              <Button style={styles.shareButton}
-                onPress={this.onSave}
-                title="Save"
-                color="#841584"
-              />
-            </View>
-          </LinearGradient>
-
-
-        </View>
-      </GestureRecognizer>
+      </View>
+      
+      </GestureRecognizer>      
     );
-  }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled.
-        </Text>
-      );
-
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https:/www.bavaerials.de'
-    );
-  };
+  }  
 }
 
 const styles = StyleSheet.create({
@@ -494,9 +473,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    position: 'relative',
 
   },
+  patternImage: {
+    position:'absolute',
+
+},
+
+
   developmentModeText: {
     position: 'absolute',
     top: 50,
@@ -514,9 +500,11 @@ const styles = StyleSheet.create({
   },
   authorView: {
     flex: 1,
+    left:20,
+    right:20,
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 110,
+    bottom: 50,
   },
   shareButton: {
     marginLeft: 30,
