@@ -25,7 +25,6 @@ import SvgUri from 'react-native-svg-uri';
 import Mask from "react-native-mask";
 import { Font } from 'expo';
 
-
 var Buffer = require('buffer/').Buffer;
 
 export default class HomeScreen extends React.Component {
@@ -64,7 +63,7 @@ export default class HomeScreen extends React.Component {
       myText: 'I\'m ready to get swiped!',
       gestureName: 'none',
       backgroundColor: '#fff',
-      modalVisible: false,
+      modalVisible: false
     }
   }
 
@@ -418,7 +417,7 @@ export default class HomeScreen extends React.Component {
               source={{ uri: this.state.authorImageURL }}
             />
           </Mask>
-          <View style={{ flex:'1', flexGrow:'1', alignItems:'flex-start', flexDirection:'column'}}>
+          <View style={{ flex:1, alignItems:'flex-start', flexDirection:'column'}}>
               <MonoText style={styles.authorText}>
                 by {this.state.author}
               </MonoText> 
@@ -426,7 +425,7 @@ export default class HomeScreen extends React.Component {
                 {this.state.tweeling}
               </MonoText>
           </View>
-           
+          <View style={{flex:1, flexShrink:1, flexDirection:'row'}}>
             <Button style={styles.shareButton}
                 onPress={this.onShare}
                 title="Share"
@@ -437,6 +436,7 @@ export default class HomeScreen extends React.Component {
                 title="Save"
                 color="#841584"
               />
+            </View>
           </View>
 
            <View style={{ flex: 1, position:'absolute', alignItems: 'center', justifyContent: 'center' }}>
@@ -471,6 +471,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
 
   container: {
+    backgroundColor:'#000000',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -495,7 +496,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 14,
     color: 'rgba(255,255,255, 1)',
-    lineHeight: 34,
+    lineHeight: 20,
     textAlign: 'center',
   },
   authorView: {
@@ -507,8 +508,15 @@ const styles = StyleSheet.create({
     bottom: 50,
   },
   shareButton: {
+    ...Platform.select({
+      ios: {
+      },
+      android: {
+        display: 'none',
+      },
+    }),
     marginLeft: 30,
-    marginRight: 30,
+    marginRight: 30
   },
   tabBarInfoContainer: {
     flex: 1,
