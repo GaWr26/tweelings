@@ -3,14 +3,16 @@ import { Platform, StyleSheet, Text, View, Button, StatusBar } from 'react-nativ
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
-//import Auth0 from 'react-native-auth0';
-
+import { createStackNavigator } from 'react-navigation';
+import SettingsScreen from './screens/SettingsScreen';
+import { AsyncStorage } from "react-native"
 
 export default class App extends React.Component {
 
-    state = {
-      isLoadingComplete: false,
-    };
+  state = {
+    isLoadingComplete: false,
+  };
+
 
 
 
@@ -26,14 +28,15 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <HomeScreen />
+          <RootStack />
+
         </View>
       );
     }
   }
 
   _loadResourcesAsync = async () => {
+    this._retrieveData();
     return Promise.all([
       Asset.loadAsync([
         /*require('./assets/images/robot-dev.png'),
@@ -59,10 +62,44 @@ export default class App extends React.Component {
 
     console.log("finished loading");
     this.setState({ isLoadingComplete: true });
+
   };
 
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('TWEELINGS');
+      if (value !== null) {
+        // We have data!!
+        console.log(value);
+        await AsyncStorage.setItem('TWEELINGS', "love think believe wish feel");
+      }else{
+        console.log("No Local Data. Creating...");
+        this._createInitData();
+      }
+     } catch (error) {
+       // Error retrieving data
+     }
+  }
 
+  _createInitData = async () => {
+    try {
+      await AsyncStorage.setItem('TWEELINGS', "'love think believe wish feel'");
+    } catch (error) {
+      // Error saving data
+    }
+  }
 }
+
+
+const RootStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Settings: SettingsScreen,
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

@@ -5,11 +5,8 @@ import {
   ScrollView,
   StyleSheet,
   CameraRoll,
-  Button,
-  Text,
   TouchableOpacity,
   TouchableHighlight,
-  View,
   Share,
   Modal,
 } from 'react-native';
@@ -24,6 +21,9 @@ import { LinearGradient } from 'expo';
 import SvgUri from 'react-native-svg-uri';
 import Mask from "react-native-mask";
 import { Font } from 'expo';
+import { View, TextInput, Text, Button } from 'react-native-ui-lib';
+import SetupData from '../data/data';
+import { createStackNavigator } from 'react-navigation';
 
 var Buffer = require('buffer/').Buffer;
 
@@ -32,6 +32,8 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
+  
+
   isInit = true
 
   reloadDuration = 10000;
@@ -39,15 +41,9 @@ export default class HomeScreen extends React.Component {
   currentTweelingIndex = 0;
   currentTweeling = {};
   activeCategory = 0;
-  tweelingCategories = [{ tweeling: "love", colour: { gradient1: 0xfbab7e, gradient2: 0xf7ce68, textHighlight: "#de025f" }, standard: true },
-  { tweeling: "think", colour: { gradient1: 0x294697, gradient2: 0x009FE3, gradient3: 0x294697, textHighlight: "#193890" }, standard: true },
-  { tweeling: "believe", colour: { gradient1: 0x006633, gradient2: 0x3AAA35, gradient3: 0x006633, textHighlight: "#0E3515" }, standard: true },
-  { tweeling: "feel", colour: { gradient1: 0xE94E1B, gradient2: 0xF9B233, gradient3: 0xE94E1B, textHighlight: "#781f00" }, standard: true },
-  { tweeling: "wish", colour: { gradient1: 0xDEB869, gradient2: 0xFFEBA6, gradient3: 0xDEB869, textHighlight: "#B58A3E" }, standard: true }];
-
   tweelingToDisplay = "";
 
-
+  tweelingCategories = SetupData
 
   activeColors = {};
 
@@ -429,6 +425,10 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
 
+          <View style={{ position: 'absolute', top: 10, right: 10 }}>
+            <Button link text70 orange30 label="Settings" marginT-20 onPress={() => this.props.navigation.navigate('Settings')}/>
+          </View>
+
           <View style={{ flex: 1, position: 'absolute', alignItems: 'center', justifyContent: 'center' }}>
             <Modal
               animationType="slide"
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     position: 'absolute',
     bottom: 30,
   },

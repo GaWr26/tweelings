@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-plugin-module-alias": "^1.6.0",
     "jest-expo": "~27.0.0",
     "react-native-scripts": "^1.14.1",
     "react-test-renderer": "16.3.1"
@@ -26,13 +28,15 @@
     "expo": "^27.0.1",
     "js-base64": "^2.4.3",
     "latest-version": "^3.1.0",
-    "native-base": "^2.7.2",
+    "native-base": "^2.8.0",
     "react": "16.3.1",
     "react-native": "github:expo/react-native#sdk-27.0.0",
     "react-native-mask": "^0.5.0",
+    "react-native-navigation": "^2.0.2509",
     "react-native-svg-uri": "^1.2.3",
     "react-native-swipe-gestures": "^1.0.2",
-    "react-navigation": "^2.0.1",
+    "react-native-ui-lib": "^3.3.223",
+    "react-navigation": "^2.12.1",
     "react-timer-mixin": "^0.13.3",
     "utf8": "^3.0.0"
   }
