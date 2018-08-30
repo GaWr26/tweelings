@@ -60,7 +60,7 @@ export default class App extends React.Component {
 
   _handleFinishLoading = () => {
 
-    console.log("finished loading");
+    console.log("finished initial loading");
     this.setState({ isLoadingComplete: true });
 
   };

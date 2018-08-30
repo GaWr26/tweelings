@@ -15,15 +15,11 @@ import { MonoText } from '../components/StyledText';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { Dimensions } from 'react-native';
 import { KeepAwake } from 'expo';
-import { Constants, takeSnapshotAsync } from 'expo';
 import { Permissions } from 'expo';
 import { LinearGradient } from 'expo';
-import SvgUri from 'react-native-svg-uri';
 import Mask from "react-native-mask";
-import { Font } from 'expo';
-import { View, TextInput, Text, Button } from 'react-native-ui-lib';
+import { View, Text, Button } from 'react-native-ui-lib';
 import SetupData from '../data/data';
-import { createStackNavigator } from 'react-navigation';
 import { AsyncStorage } from "react-native"
 
 var Buffer = require('buffer/').Buffer;
@@ -33,8 +29,6 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
-
-
   isInit = true
 
   reloadDuration = 10000;
@@ -42,36 +36,33 @@ export default class HomeScreen extends React.Component {
   currentTweelingIndex = 0;
   currentTweeling = {};
   activeCategory = 0;
-  tweelingToDisplay = "";
-
-  //tweelingCategories = SetupData
-
-  activeColors = {};
-
-
+  activeColorIndex = 0;
 
   constructor() {
     super()
     this.state = {
       tweelingCategories: [],
+      gotBearer:false,
       tweelingToShow: '',
       tweeling: '',
       author: '',
       authorImageURL: 'http://',
       myText: 'I\'m ready to get swiped!',
       gestureName: 'none',
-      backgroundColor: '#fff',
       modalVisible: false
     }
   }
 
 
   componentDidMount() {
-    this.activeColors = this.colors0;
-    this._retrieveData();
-
     this.load()
     this.props.navigation.addListener('willFocus', this.load)
+
+    this.getBearer();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._interval);
   }
 
   load = () => {
@@ -80,13 +71,14 @@ export default class HomeScreen extends React.Component {
   }
 
   _retrieveData = async () => {
+    console.log("loading data from storage");
     try {
       const value = await AsyncStorage.getItem('TWEELINGS');
       if (value !== null) {
         // We have data!!
         //console.log(value);
         this.setState({ tweelingCategories: value.split(",") })
-        this.getBearer();
+        this.loadTweeling(this.state.tweelingCategories[this.state.tweelingCategories.length-1]);
       }
     } catch (error) {
       // Error retrieving data
@@ -135,14 +127,8 @@ export default class HomeScreen extends React.Component {
 
           ]
         })
-
     }
-
-
-
   }
-
-
 
 
   onSwipeUp(gestureState) {
@@ -182,11 +168,7 @@ export default class HomeScreen extends React.Component {
       this.currentTweelingIndex++;
       this.displayTweeling();
     }
-
-
   }
-
-
 
 
   reloadTimer = (action) => {
@@ -201,10 +183,6 @@ export default class HomeScreen extends React.Component {
 
   }
 
-  componentWillUnmount() {
-    clearInterval(this._interval);
-  }
-
   nextCategory = () => {
     if (this.activeCategory > 0) {
       this.activeCategory--;
@@ -215,7 +193,7 @@ export default class HomeScreen extends React.Component {
   }
 
   getBearer = () => {
-    console.log("loading tweeling");
+    console.log("Getting Bearer Token");
 
     var details = {
       'grant_type': 'client_credentials'
@@ -246,33 +224,25 @@ export default class HomeScreen extends React.Component {
     }).then((response) => response.json())
       .then((responseData) => {
         bearerToken = responseData.access_token;
-        //console.log("Got Bearer: "/* + responseData.access_token*/);
+        console.log("Received Bearer Token"/* + responseData.access_token*/);
         //console.log("Load tweeling: " + this.state.tweelingCategories[this.activeCategory])
         //loadTweeling();
-        this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
-
-
+        //this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
+        this.setState({ gotBearer: true});
+        this._retrieveData();
       });
-
-
-
   };
 
 
   loadTweeling = (q) => {
 
-    this.setState({ backgroundColor: '#ff0000', tweelingToShow: "", tweeling: "#" + q });
+    this.setState({tweelingToShow: "", tweeling: "#" + q });
 
     if (q != this.currentTweeling) {
       this.isInit = true;
-      //tweeling.visible = false;
-      //btnAuthor.visible = false;
-      //tweelingArrayCollection = new ArrayCollection();
       this.currentTweelingIndex = 0;
-      this.activeColors = q.colour;
-
-
-      //arangeBG();
+      var randomNumber = Math.floor(Math.random() * SetupData.length) + 0  
+      this.activeColorIndex = randomNumber;
     }
     this.currentTweeling = q;
     console.log("loadTweelings: " + q.tweeling)
@@ -292,9 +262,6 @@ export default class HomeScreen extends React.Component {
           this.isInit = false;
           this.displayTweeling();
         }
-
-
-
       });
   };
 
@@ -309,13 +276,6 @@ export default class HomeScreen extends React.Component {
       this.currentTweelingIndex = 0;
       return;
     }
-
-
-    //console.log(this.tweelingsCollection[this.currentTweelingIndex].user.profile_image_url);
-
-    /*for(let i = 0; i < data.length; i++){
-      console.log(data[i].text);
-    }*/
 
     var myPattern = new RegExp(this.currentTweeling.tweeling, "gi");
     var theString = this.tweelingsCollection[this.currentTweelingIndex].text.toLocaleLowerCase();
@@ -340,7 +300,6 @@ export default class HomeScreen extends React.Component {
       newString = newString.substr(1, newString.length);
     }
 
-
     // remove urls
     myPattern = new RegExp(/((?:[a-z][a-z]+))(:)(\/)((?:\/[\w\.\-]+)+)( )/gi);
     newString = newString.replace(myPattern, "");
@@ -353,8 +312,6 @@ export default class HomeScreen extends React.Component {
       newString = newString.substr(1, newString.length);
     }
     console.log(newString);
-
-
 
     this.setState({ tweelingToShow: newString, author: this.tweelingsCollection[this.currentTweelingIndex].user.name, authorImageURL: this.tweelingsCollection[this.currentTweelingIndex].user.profile_image_url })
   };
@@ -369,7 +326,7 @@ export default class HomeScreen extends React.Component {
     }
   }
   gradientColors = function (options) {
-    return ['#f7ce68', '#fbab7e'];
+    return [SetupData[this.activeColorIndex].gradient1, SetupData[this.activeColorIndex].gradient2];
 
   }
 
@@ -378,7 +335,7 @@ export default class HomeScreen extends React.Component {
       marginRight: 50,
       marginLeft: 20,
       fontSize: 28,
-      color: '#ff0000',
+      color: SetupData[this.activeColorIndex].textHighlight, 
       lineHeight: 34,
       textAlign: 'center'
     }
@@ -386,7 +343,7 @@ export default class HomeScreen extends React.Component {
 
   patternStyle = function (options) {
     return {
-      tintColor: '#0000ff',
+      tintColor: SetupData[this.activeColorIndex].textHighlight,
       flex: 1,
       alignSelf: 'stretch',
       height: undefined,
@@ -451,8 +408,8 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
 
-          <View style={{ position: 'absolute', top: 20, right: 10 }}>
-            <Button link text70 orange30 label="Settings" marginT-20 onPress={() => this.props.navigation.navigate('Settings')} />
+          <View style={{ position: 'absolute', top: 50, right: 10 }}>
+            <Button label="Settings" size="small" onPress={() => this.props.navigation.navigate('Settings')} />
           </View>
 
           <View style={{ flex: 1, position: 'absolute', alignItems: 'center', justifyContent: 'center' }}>

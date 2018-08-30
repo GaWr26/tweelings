@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, TextInput, Text, Button, TagsInput } from 'react-native-ui-lib';
+import { View, TextInput, Text, Button, TagsInput, Typography,Colors } from 'react-native-ui-lib';
 import Model from '../data/data';
-import { createStackNavigator } from 'react-navigation';
 import { StyleSheet, } from 'react-native';
 import { AsyncStorage } from "react-native"
 
 export default class SettingsScreen extends React.Component {
-
+  static navigationOptions = {
+    header: null,
+  };
 
 
     constructor() {
@@ -40,8 +41,8 @@ export default class SettingsScreen extends React.Component {
     
       renderCustomTag(tag, index, shouldMarkToRemove) {
         return (
-          <View style={[styles.customTag, shouldMarkToRemove && {backgroundColor: '#00ff00'}]}>
-            <Text white >{tag.label}</Text>
+          <View style={[styles.customTag,  shouldMarkToRemove && {backgroundColor: Colors.purple50}]}>
+            <Text white text30>{tag}</Text>
           </View>
         );
       }
@@ -62,16 +63,19 @@ export default class SettingsScreen extends React.Component {
             // Error saving data
           }
     }
-
  
     render() {
         return (
-            <View top paddingT-50>
+            <View paddingT-50 paddingL-20 paddingR-20 paddingB-20>
+             <Text blue50 text20>Saved tweelings</Text>
                <TagsInput 
-               containerStyle={{marginBottom: 20}} 
+               containerStyle={{marginBottom: 20, marginTop:20}} 
                placeholder="Add tweeling" 
                onChangeTags={(tags) => this.onChangeTags(tags)}
+               inputStyle={{...Typography.text60, color: Colors.blue30}}
+               renderTag={this.renderCustomTag}
                tags={this.state.tags} />
+               <Button label="back"   marginB-20 onPress={() =>  this.props.navigation.navigate('Home')}/>
             </View>
         );
 
@@ -90,13 +94,14 @@ const styles = StyleSheet.create({
 
     },
     customTag: {
-        backgroundColor: "#ff0000",
-        paddingVertical: 2,
-        paddingHorizontal: 8,
+        backgroundColor: "#de025f",
+        paddingVertical: 5,
+        paddingHorizontal: 12,
         borderRadius: 3,
         marginRight: 20,
         marginBottom: 20,
       },
+
 
 })
 
