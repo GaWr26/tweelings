@@ -24,6 +24,7 @@ import { Font } from 'expo';
 import { View, TextInput, Text, Button } from 'react-native-ui-lib';
 import SetupData from '../data/data';
 import { createStackNavigator } from 'react-navigation';
+import { AsyncStorage } from "react-native"
 
 var Buffer = require('buffer/').Buffer;
 
@@ -32,7 +33,7 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
-  
+
 
   isInit = true
 
@@ -43,7 +44,7 @@ export default class HomeScreen extends React.Component {
   activeCategory = 0;
   tweelingToDisplay = "";
 
-  tweelingCategories = SetupData
+  //tweelingCategories = SetupData
 
   activeColors = {};
 
@@ -52,6 +53,7 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super()
     this.state = {
+      tweelingCategories: [],
       tweelingToShow: '',
       tweeling: '',
       author: '',
@@ -60,6 +62,34 @@ export default class HomeScreen extends React.Component {
       gestureName: 'none',
       backgroundColor: '#fff',
       modalVisible: false
+    }
+  }
+
+
+  componentDidMount() {
+    this.activeColors = this.colors0;
+    this._retrieveData();
+
+    this.load()
+    this.props.navigation.addListener('willFocus', this.load)
+  }
+
+  load = () => {
+    //console.log("I'm visible!");
+    this._retrieveData();
+  }
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('TWEELINGS');
+      if (value !== null) {
+        // We have data!!
+        //console.log(value);
+        this.setState({ tweelingCategories: value.split(",") })
+        this.getBearer();
+      }
+    } catch (error) {
+      // Error retrieving data
     }
   }
 
@@ -117,25 +147,25 @@ export default class HomeScreen extends React.Component {
 
   onSwipeUp(gestureState) {
 
-    if (this.activeCategory < this.tweelingCategories.length - 1) {
+    if (this.activeCategory < this.state.tweelingCategories.length - 1) {
       this.activeCategory++;
     } else {
       this.activeCategory = 0;
     }
-    this.loadTweeling(this.tweelingCategories[this.activeCategory]);
+    this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
 
 
-    this.setState({ myText: 'You swiped up! Now showing ' + this.tweelingCategories[this.activeCategory].tweeling });
+    this.setState({ myText: 'You swiped up! Now showing ' + this.state.tweelingCategories[this.activeCategory].tweeling });
   }
 
   onSwipeDown(gestureState) {
     if (this.activeCategory > 0) {
       this.activeCategory--;
     } else {
-      this.activeCategory = this.tweelingCategories.length - 1
+      this.activeCategory = this.state.tweelingCategories.length - 1
     }
-    this.loadTweeling(this.tweelingCategories[this.activeCategory]);
-    this.setState({ myText: 'You swiped down! Now showing ' + this.tweelingCategories[this.activeCategory].tweeling });
+    this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
+    this.setState({ myText: 'You swiped down! Now showing ' + this.state.tweelingCategories[this.activeCategory].tweeling });
   }
 
   onSwipeLeft(gestureState) {
@@ -158,11 +188,6 @@ export default class HomeScreen extends React.Component {
 
 
 
-  componentDidMount() {
-
-    this.activeColors = this.colors0;
-    this.getBearer();
-  }
 
   reloadTimer = (action) => {
     if (action == "start") {
@@ -184,9 +209,9 @@ export default class HomeScreen extends React.Component {
     if (this.activeCategory > 0) {
       this.activeCategory--;
     } else {
-      this.activeCategory = this.tweelingCategories.length - 1
+      this.activeCategory = this.state.tweelingCategories.length - 1
     }
-    this.loadTweeling(this.tweelingCategories[this.activeCategory]);
+    this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
   }
 
   getBearer = () => {
@@ -221,9 +246,10 @@ export default class HomeScreen extends React.Component {
     }).then((response) => response.json())
       .then((responseData) => {
         bearerToken = responseData.access_token;
-        console.log("Got Bearer: "/* + responseData.access_token*/);
+        //console.log("Got Bearer: "/* + responseData.access_token*/);
+        //console.log("Load tweeling: " + this.state.tweelingCategories[this.activeCategory])
         //loadTweeling();
-        this.loadTweeling(this.tweelingCategories[this.activeCategory]);
+        this.loadTweeling(this.state.tweelingCategories[this.activeCategory]);
 
 
       });
@@ -235,7 +261,7 @@ export default class HomeScreen extends React.Component {
 
   loadTweeling = (q) => {
 
-    this.setState({ backgroundColor: this.tweelingCategories[this.activeCategory].colour.gradient1, tweelingToShow: "", tweeling: "#" + q.tweeling });
+    this.setState({ backgroundColor: '#ff0000', tweelingToShow: "", tweeling: "#" + q });
 
     if (q != this.currentTweeling) {
       this.isInit = true;
@@ -250,7 +276,7 @@ export default class HomeScreen extends React.Component {
     }
     this.currentTweeling = q;
     console.log("loadTweelings: " + q.tweeling)
-    fetch('https://api.twitter.com/1.1/search/tweets.json?lang=en&count=50&q=' + q.tweeling, {
+    fetch('https://api.twitter.com/1.1/search/tweets.json?lang=en&count=50&q=' + q, {
       method: 'GET',
       headers: {
         'Authorization': "Bearer " + bearerToken
@@ -352,7 +378,7 @@ export default class HomeScreen extends React.Component {
       marginRight: 50,
       marginLeft: 20,
       fontSize: 28,
-      color: this.tweelingCategories[this.activeCategory].colour.textHighlight,
+      color: '#ff0000',
       lineHeight: 34,
       textAlign: 'center'
     }
@@ -360,7 +386,7 @@ export default class HomeScreen extends React.Component {
 
   patternStyle = function (options) {
     return {
-      tintColor: this.tweelingCategories[this.activeCategory].colour.textHighlight,
+      tintColor: '#0000ff',
       flex: 1,
       alignSelf: 'stretch',
       height: undefined,
@@ -425,8 +451,8 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
 
-          <View style={{ position: 'absolute', top: 10, right: 10 }}>
-            <Button link text70 orange30 label="Settings" marginT-20 onPress={() => this.props.navigation.navigate('Settings')}/>
+          <View style={{ position: 'absolute', top: 20, right: 10 }}>
+            <Button link text70 orange30 label="Settings" marginT-20 onPress={() => this.props.navigation.navigate('Settings')} />
           </View>
 
           <View style={{ flex: 1, position: 'absolute', alignItems: 'center', justifyContent: 'center' }}>

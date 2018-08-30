@@ -27,7 +27,7 @@ export default class SettingsScreen extends React.Component {
           if (value !== null) {
             // We have data!!
             console.log(value);
-            this.setState({ tags: value.split(" ")})
+            this.setState({ tags: value.split(",")})
           }
          } catch (error) {
            // Error retrieving data
@@ -41,35 +41,36 @@ export default class SettingsScreen extends React.Component {
       renderCustomTag(tag, index, shouldMarkToRemove) {
         return (
           <View style={[styles.customTag, shouldMarkToRemove && {backgroundColor: '#00ff00'}]}>
-            <Text white>{tag.label}</Text>
+            <Text white >{tag.label}</Text>
           </View>
         );
       }
 
-    onCreateTag(tag){
-          console.log("created Tag: " + tag);
-          //console.log("all tags: " + this.state.tags.split(",") + " " + tag);
-        
+    onChangeTags(tags){
+          console.log("Change Tags: " + tags);
+          this.setState({tags});        
+          this.saveData(tags);
           
           
     }
 
-    saveData= async () => {
+    saveData= async (tags) => {
+      console.log("attempting to save values: " + tags);
         try {
-            await AsyncStorage.setItem('TWEELINGS', this.state.tags.split(",") + " " + tag);
-            this._retrieveData();
+            await AsyncStorage.setItem('TWEELINGS', tags.toString());
           } catch (error) {
             // Error saving data
           }
     }
 
+ 
     render() {
         return (
-            <View style={styles.container} ref="mainScreen">
+            <View top paddingT-50>
                <TagsInput 
-               onCreateTag={value =>this.onCreateTag(value)}
                containerStyle={{marginBottom: 20}} 
-               placeholder="Enter tweelings" 
+               placeholder="Add tweeling" 
+               onChangeTags={(tags) => this.onChangeTags(tags)}
                tags={this.state.tags} />
             </View>
         );
@@ -93,8 +94,8 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         paddingHorizontal: 8,
         borderRadius: 3,
-        marginRight: 10,
-        marginBottom: 10,
+        marginRight: 20,
+        marginBottom: 20,
       },
 
 })
