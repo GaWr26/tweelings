@@ -245,7 +245,7 @@ export default class HomeScreen extends React.Component {
       this.activeColorIndex = randomNumber;
     }
     this.currentTweeling = q;
-    console.log("loadTweelings: " + q.tweeling)
+    console.log("loadTweelings: " + q)
     fetch('https://api.twitter.com/1.1/search/tweets.json?lang=en&count=50&q=' + q, {
       method: 'GET',
       headers: {
@@ -254,7 +254,6 @@ export default class HomeScreen extends React.Component {
     }).then((response) => response.json())
       .then((responseData) => {
         console.log("Tweets Loaded successfully...")
-
         //console.log(JSON.stringify(responseData.statuses));
         this.tweelingsCollection = responseData.statuses;
 
@@ -270,7 +269,7 @@ export default class HomeScreen extends React.Component {
     this.reloadTimer("stop");
     this.reloadTimer("start");
 
-    console.log("currentindex:" + this.currentTweelingIndex + " length: " + this.tweelingsCollection.length)
+    //console.log("currentindex:" + this.currentTweelingIndex + " length: " + this.tweelingsCollection.length)
     if (this.currentTweelingIndex + 1 === this.tweelingsCollection.length) {
       this.loadTweeling(this.currentTweeling);
       this.currentTweelingIndex = 0;
@@ -311,7 +310,8 @@ export default class HomeScreen extends React.Component {
     if (newString.charAt(0) == " ") {
       newString = newString.substr(1, newString.length);
     }
-    console.log(newString);
+    //console.log(newString);
+    console.log("Displaying new tweeling")
 
     this.setState({ tweelingToShow: newString, author: this.tweelingsCollection[this.currentTweelingIndex].user.name, authorImageURL: this.tweelingsCollection[this.currentTweelingIndex].user.profile_image_url })
   };
@@ -360,7 +360,7 @@ export default class HomeScreen extends React.Component {
     return (
       <GestureRecognizer
         onSwipeUp={(state) => this.onSwipeUp(state)}
-        onSwipeDown={(state) => this.onSwipeDown(state)}
+        onSwipeDown={(state) => this.onSwipeDown(sutate)}
         onSwipeLeft={(state) => this.onSwipeLeft(state)}
         onSwipeRight={(state) => this.onSwipeRight(state)}
         config={config}
@@ -432,7 +432,7 @@ export default class HomeScreen extends React.Component {
                 </View>
               </View>
             </Modal>
-          </View>
+          </View> 
         </View>
 
       </GestureRecognizer>

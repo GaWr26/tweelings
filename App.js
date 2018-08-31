@@ -70,7 +70,7 @@ export default class App extends React.Component {
       const value = await AsyncStorage.getItem('TWEELINGS');
       if (value !== null) {
         // We have data!!
-        console.log(value);
+        //console.log(value);
         //await AsyncStorage.setItem('TWEELINGS', "love,think,believe,wish,feel");
       }else{
         console.log("No Local Data. Creating...");

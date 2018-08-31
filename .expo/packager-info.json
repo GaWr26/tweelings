@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 5642,
-  "expoServerNgrokUrl": "https://h7-cjx.gawr.tweelings.exp.direct",
-  "packagerNgrokUrl": "https://packager.h7-cjx.gawr.tweelings.exp.direct",
-  "ngrokPid": 5679
+  "packagerPort": 8081,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://hg-hm4.gawr.tweelings.exp.direct",
+  "packagerNgrokUrl": "https://packager.hg-hm4.gawr.tweelings.exp.direct",
+  "ngrokPid": 17605
 }
