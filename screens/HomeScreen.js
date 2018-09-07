@@ -372,7 +372,7 @@ export default class HomeScreen extends React.Component {
           <LinearGradient colors={this.gradientColors()}
             style={{ position: 'absolute', width: '100%', height: '100%' }} />
           <Image style={this.patternStyle()}
-            source={require('../assets/images/patterns/pattern.png')}
+            source={require('../assets/images/patterns/pattern_02.png')}
             resizeMode="stretch"
           />
           <View style={{ position: 'absolute', top: 100, left: 0 }}>

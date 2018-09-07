@@ -2,7 +2,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://hg-hm4.gawr.tweelings.exp.direct",
+  "packagerNgrokUrl": "https://packager.hg-hm4.gawr.tweelings.exp.direct",
+  "ngrokPid": 2974
 }
