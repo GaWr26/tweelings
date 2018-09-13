@@ -9,18 +9,16 @@ import {
   TouchableHighlight,
   Share,
   Modal,
+  Dimensions,
+  AsyncStorage,
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import { Dimensions } from 'react-native';
-import { KeepAwake } from 'expo';
-import { Permissions } from 'expo';
-import { LinearGradient } from 'expo';
+import { KeepAwake, LinearGradient, Permissions } from 'expo';
 import Mask from "react-native-mask";
 import { View, Text, Button } from 'react-native-ui-lib';
 import SetupData from '../data/data';
-import { AsyncStorage } from "react-native"
 
 var Buffer = require('buffer/').Buffer;
 

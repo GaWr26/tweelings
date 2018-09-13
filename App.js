@@ -83,7 +83,7 @@ export default class App extends React.Component {
 
   _createInitData = async () => {
     try {
-      await AsyncStorage.setItem('TWEELINGS', "'love,think,believe,wish,feel'");
+      await AsyncStorage.setItem('TWEELINGS', "love,think,believe,wish,feel");
     } catch (error) {
       // Error saving data
     }

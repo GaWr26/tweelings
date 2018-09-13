@@ -38,6 +38,8 @@
     "react-native-ui-lib": "^3.3.223",
     "react-navigation": "^2.12.1",
     "react-timer-mixin": "^0.13.3",
+    "redux": "^4.0.0",
+    "redux-persist": "^5.10.0",
     "utf8": "^3.0.0"
   }
 }

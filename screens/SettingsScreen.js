@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TextInput, Text, Button, TagsInput, Typography, Colors } from 'react-native-ui-lib';
-import Model from '../data/data';
-import { StyleSheet, } from 'react-native';
-import { AsyncStorage } from "react-native"
+import { StyleSheet,AsyncStorage } from 'react-native';
+import { LinearGradient } from 'expo';
+import SetupData from '../data/data';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -64,19 +64,32 @@ export default class SettingsScreen extends React.Component {
     }
   }
 
+  gradientColors = function (options) {
+    return [SetupData[this.activeColorIndex].gradient1, SetupData[this.activeColorIndex].gradient2];
+
+  }
+
   render() {
     return (
-      <View paddingT-50 paddingL-20 paddingR-20 paddingB-20>
-        <Text blue50 text20>Saved tweelings</Text>
-        <TagsInput
-          containerStyle={{ marginBottom: 20, marginTop: 20 }}
-          placeholder="Add tweeling"
-          onChangeTags={(tags) => this.onChangeTags(tags)}
-          inputStyle={{ ...Typography.text60, color: Colors.blue30 }}
-          renderTag={this.renderCustomTag}
-          tags={this.state.tags} />
-        <Button label="back" marginB-20 onPress={() => this.props.navigation.navigate('Home')} />
-      </View>
+
+      <View  style={styles.container}>
+        <LinearGradient colors={['#f7ce68', '#fbab7e']}
+            style={{ position: 'absolute', width: '100%', height: '100%' }} />
+        <View paddingT-50 paddingL-20 paddingR-20 paddingB-20>
+      
+      <Text blue50 text20>Saved tweelings</Text>
+      <TagsInput
+        containerStyle={{ marginBottom: 20, marginTop: 20 }}
+        placeholder="Add tweeling"
+        onChangeTags={(tags) => this.onChangeTags(tags)}
+        inputStyle={{ ...Typography.text60, color: Colors.blue30 }}
+        renderTag={this.renderCustomTag}
+        tags={this.state.tags} />
+      <Button label="back" marginB-20 onPress={() => this.props.navigation.navigate('Home')} />
+    </View>
+        </View>
+
+      
     );
 
 
